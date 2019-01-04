@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { withAuthenticator } from 'aws-amplify-react';
+import { API, graphqlOperation } from 'aws-amplify'
+import { listGrudges } from './graphql/queries'
+import { createGrudge } from './graphql/mutations'
 import NewGrudge from './NewGrudge';
 import Grudges from './Grudges';
 import './Application.css';
@@ -9,8 +12,19 @@ class Application extends Component {
     grudges: [],
   };
 
+  componentDidMount() {
+    API.graphql(graphqlOperation(listGrudges)).then(response => {
+      const grudges = response.data.listGrudges.items
+      this.setState({ grudges })
+    })
+  }
+
   addGrudge = grudge => {
-    this.setState({ grudges: [grudge, ...this.state.grudges] });
+    API.graphql(graphqlOperation(createGrudge, grudge)).then(response => {
+      const newGrudge = response.data.createGrudge
+      console.log(response)
+      this.setState({ grudges: [newGrudge, ...this.state.grudges] });
+    })
   };
 
   removeGrudge = grudge => {
