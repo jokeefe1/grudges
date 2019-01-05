@@ -25,3 +25,8 @@ aws-exports.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+amplify
+.amplify
+.amplifyrc
+src/aws-exports.js
